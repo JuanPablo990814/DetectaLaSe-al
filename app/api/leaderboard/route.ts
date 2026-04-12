@@ -1,17 +1,26 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { supabase } from '@/lib/supabase';
 
-const DB_PATH = path.join(process.cwd(), 'leaderboard.json');
+// Use Edge Runtime for Cloudflare compatibility
+export const runtime = 'edge';
 
 export async function GET() {
   try {
-    if (!fs.existsSync(DB_PATH)) {
-      return NextResponse.json([]);
-    }
-    const data = fs.readFileSync(DB_PATH, 'utf-8');
-    const scores = JSON.parse(data);
-    return NextResponse.json(scores);
+    const { data, error } = await supabase
+      .from('leaderboard')
+      .select('name, score, created_at')
+      .order('score', { ascending: false })
+      .limit(10);
+
+    if (error) throw error;
+    
+    // Map created_at to date for compatibility with the frontend
+    const formattedData = data.map(item => ({
+      ...item,
+      date: item.created_at
+    }));
+
+    return NextResponse.json(formattedData);
   } catch (error) {
     console.error("Error reading leaderboard:", error);
     return NextResponse.json({ error: "Could not read leaderboard" }, { status: 500 });
@@ -20,24 +29,17 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const newEntry = await req.json();
-    
-    // Read existing
-    let scores = [];
-    if (fs.existsSync(DB_PATH)) {
-      const data = fs.readFileSync(DB_PATH, 'utf-8');
-      scores = JSON.parse(data);
+    const { name, score } = await req.json();
+
+    if (!name || score === undefined) {
+      return NextResponse.json({ error: "Missing name or score" }, { status: 400 });
     }
 
-    // Add new
-    scores.push(newEntry);
-    
-    // Sort logic happens strictly on reads/displays to save time, but we can also store only top N
-    // But since it's local json we can store everything, or we can sort and keep top 100 just to avoid huge files
-    scores.sort((a: {score: number}, b: {score: number}) => b.score - a.score);
-    scores = scores.slice(0, 100);
+    const { error } = await supabase
+      .from('leaderboard')
+      .insert([{ name, score }]);
 
-    fs.writeFileSync(DB_PATH, JSON.stringify(scores, null, 2));
+    if (error) throw error;
 
     return NextResponse.json({ success: true });
   } catch (error) {
