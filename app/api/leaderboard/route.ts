@@ -5,6 +5,10 @@ import { supabase } from '@/lib/supabase';
 export const runtime = 'edge';
 
 export async function GET() {
+  if (!supabase) {
+    return NextResponse.json({ error: "Supabase connection not configured" }, { status: 500 });
+  }
+
   try {
     const { data, error } = await supabase
       .from('leaderboard')
@@ -28,6 +32,10 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  if (!supabase) {
+    return NextResponse.json({ error: "Supabase connection not configured" }, { status: 500 });
+  }
+
   try {
     const { name, score } = await req.json();
 
