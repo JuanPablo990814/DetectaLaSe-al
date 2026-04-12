@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Heart, Activity, Ban, PlusCircle, Check, ChevronRight } from "lucide-react";
 import clsx from "clsx";
 
@@ -12,7 +12,7 @@ const ACTIONS = [
   { id: "a4", label: "Comer vegetales", type: "good", icon: <Heart className="w-6 h-6" /> },
 ];
 
-export default function RoutineMinigame({ onComplete, currentScore }: { onComplete: (bonus: number) => void, currentScore: number }) {
+export default function RoutineMinigame({ onComplete }: { onComplete: (bonus: number) => void }) {
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
   const [isFinished, setIsFinished] = useState(false);
 

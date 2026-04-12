@@ -37,7 +37,9 @@ export default function TriviaGame({ onComplete }: { onComplete: (score: number)
       const audio = new Audio(path);
       audio.volume = 0.5;
       audio.play().catch(() => {});
-    } catch(e) {}
+    } catch {
+      // Ignore audio load errors
+    }
   };
 
   const handleNext = () => {

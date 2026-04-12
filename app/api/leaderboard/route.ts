@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     
     // Sort logic happens strictly on reads/displays to save time, but we can also store only top N
     // But since it's local json we can store everything, or we can sort and keep top 100 just to avoid huge files
-    scores.sort((a: any, b: any) => b.score - a.score);
+    scores.sort((a: {score: number}, b: {score: number}) => b.score - a.score);
     scores = scores.slice(0, 100);
 
     fs.writeFileSync(DB_PATH, JSON.stringify(scores, null, 2));

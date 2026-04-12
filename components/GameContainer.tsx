@@ -58,7 +58,7 @@ export default function GameContainer() {
     <div className="w-full max-w-2xl mx-auto min-h-[650px] bg-white rounded-3xl shadow-2xl shadow-pink-500/10 overflow-hidden border-4 border-pink-100 flex flex-col relative top-0">
       {gameState === "START" && <StartScreen onStart={handleStart} onShowLeaderboard={() => setGameState("LEADERBOARD")} />}
       {gameState === "TRIVIA" && <TriviaGame onComplete={handleTriviaComplete} />}
-      {gameState === "MINIGAME" && <RoutineMinigame onComplete={handleMinigameComplete} currentScore={score} />}
+      {gameState === "MINIGAME" && <RoutineMinigame onComplete={handleMinigameComplete} />}
       {gameState === "RESULTS" && <ResultsScreen score={score} onRestart={handleRestart} onShowLeaderboard={() => setGameState("LEADERBOARD")} />}
       {gameState === "LEADERBOARD" && (
         <Leaderboard onBack={() => {
