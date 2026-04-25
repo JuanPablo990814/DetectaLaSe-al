@@ -55,7 +55,7 @@ export default function GameContainer() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto min-h-[650px] bg-white rounded-3xl shadow-2xl shadow-pink-500/10 overflow-hidden border-4 border-pink-100 flex flex-col relative top-0">
+    <div className="w-full max-w-4xl mx-auto min-h-[650px] sm:min-h-[750px] bg-white rounded-3xl shadow-[0_0_50px_rgba(236,72,153,0.15)] overflow-hidden border border-pink-100 flex flex-col relative top-0">
       {gameState === "START" && <StartScreen onStart={handleStart} onShowLeaderboard={() => setGameState("LEADERBOARD")} />}
       {gameState === "TRIVIA" && <TriviaGame onComplete={handleTriviaComplete} />}
       {gameState === "MINIGAME" && <RoutineMinigame onComplete={handleMinigameComplete} />}
