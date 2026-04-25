@@ -22,23 +22,23 @@ export default function TriviaGame({ onComplete }: { onComplete: (score: number)
     setShowFeedback(true);
 
     if (answer === question.correctAnswer) {
-      setScore((prev) => prev + 10 + (streak >= 2 ? 5 : 0)); // Bonus points for streak
+      setScore((prev) => prev + 10 + (streak >= 2 ? 5 : 0));
       setStreak((prev) => prev + 1);
-      playAudio('/sounds/success.mp3');
+      playAudio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
     } else {
       setScore((prev) => prev - 5);
       setStreak(0);
-      playAudio('/sounds/error.mp3');
+      playAudio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
     }
   };
 
-  const playAudio = (path: string) => {
+  const playAudio = (url: string) => {
     try {
-      const audio = new Audio(path);
-      audio.volume = 0.5;
+      const audio = new Audio(url);
+      audio.volume = 0.4;
       audio.play().catch(() => {});
-    } catch {
-      // Ignore audio load errors
+    } catch (e) {
+      console.error("Audio error", e);
     }
   };
 
@@ -48,6 +48,9 @@ export default function TriviaGame({ onComplete }: { onComplete: (score: number)
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
+      if (score >= 80) {
+        playAudio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3');
+      }
       onComplete(score);
     }
   };

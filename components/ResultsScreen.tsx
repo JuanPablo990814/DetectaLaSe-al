@@ -1,10 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Award, RotateCcw, Medal, Trophy } from "lucide-react";
+import { Award, RotateCcw, Medal, Trophy, BookOpen, PlayCircle } from "lucide-react";
 import clsx from "clsx";
+import { useState } from "react";
+import ResourcesModal from "./ResourcesModal";
 
 export default function ResultsScreen({ score, onRestart, onShowLeaderboard }: { score: number, onRestart: () => void, onShowLeaderboard: () => void }) {
+  const [modalType, setModalType] = useState<"bib" | "vid" | null>(null);
+  
   let message = "";
   let subMessage = "";
   let color = "";
@@ -25,6 +29,12 @@ export default function ResultsScreen({ score, onRestart, onShowLeaderboard }: {
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-white relative overflow-hidden">
+      <ResourcesModal 
+        isOpen={modalType !== null} 
+        onClose={() => setModalType(null)} 
+        type={modalType === "bib" ? "bib" : "vid"} 
+      />
+
       <div className="absolute -top-32 -left-32 w-64 h-64 bg-pink-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
       <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-pink-200 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
 
@@ -55,9 +65,26 @@ export default function ResultsScreen({ score, onRestart, onShowLeaderboard }: {
         </div>
 
         <h2 className={clsx("text-2xl sm:text-3xl font-extrabold mb-4", color)}>{message}</h2>
-        <p className="text-neutral-600 max-w-md mx-auto mb-10 text-lg">
+        <p className="text-neutral-600 max-w-md mx-auto mb-8 text-lg">
           {subMessage}
         </p>
+
+        <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
+          <button
+            onClick={() => setModalType("bib")}
+            className="flex items-center gap-2 text-pink-600 font-bold bg-pink-50 hover:bg-pink-100 px-5 py-3 rounded-2xl transition-colors border border-pink-100"
+          >
+            <BookOpen className="w-5 h-5" />
+            Bibliografía
+          </button>
+          <button
+            onClick={() => setModalType("vid")}
+            className="flex items-center gap-2 text-red-600 font-bold bg-red-50 hover:bg-red-100 px-5 py-3 rounded-2xl transition-colors border border-red-100"
+          >
+            <PlayCircle className="w-5 h-5" />
+            Vídeos del tema
+          </button>
+        </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-auto">
           <button

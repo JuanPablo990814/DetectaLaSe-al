@@ -16,13 +16,31 @@ export default function RoutineMinigame({ onComplete }: { onComplete: (bonus: nu
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
   const [isFinished, setIsFinished] = useState(false);
 
+  const playAudio = (url: string) => {
+    try {
+      const audio = new Audio(url);
+      audio.volume = 0.4;
+      audio.play().catch(() => {});
+    } catch (e) {}
+  };
+
   const toggleAction = (id: string) => {
+    const action = ACTIONS.find(a => a.id === id);
+    if (!selectedActions.includes(id)) {
+      if (action?.type === "good") {
+        playAudio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+      } else {
+        playAudio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
+      }
+    }
+    
     setSelectedActions(prev => 
       prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id]
     );
   };
 
   const handleFinish = () => {
+    playAudio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3');
     setIsFinished(true);
   };
 
