@@ -21,7 +21,9 @@ export default function RoutineMinigame({ onComplete }: { onComplete: (bonus: nu
       const audio = new Audio(url);
       audio.volume = 0.4;
       audio.play().catch(() => {});
-    } catch (e) {}
+    } catch {
+      // Ignore audio load errors
+    }
   };
 
   const toggleAction = (id: string) => {
